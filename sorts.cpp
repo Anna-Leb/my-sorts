@@ -53,7 +53,6 @@ int main()
  cout << endl;
 }
 
-
 //сорировка вставками
 #include <iostream>
 #include <time.h>
@@ -103,4 +102,22 @@ int main()
         cout << list[i] << "\t";
     }
     return 0;
+}
+
+//быстрая сортировка макет
+#include <iostream>
+#include <time.h>
+#include <cstdlib>
+using namespace std;
+
+int partition (int list[], int start, int opora)
+{
+    int i = start;
+    while (i < opora)
+    {
+        if (list[i] > list[opora] && i == opora - 1)
+        {
+            
+        }
+    }
 }
