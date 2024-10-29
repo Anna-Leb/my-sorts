@@ -1,4 +1,4 @@
-//сортировка перебором
+//сортировка выбором
 #include <iostream>
 #include <time.h>
 #include <cstdlib>
@@ -53,7 +53,6 @@ int main()
  cout << endl;
 }
 
-
 //сорировка вставками
 #include <iostream>
 #include <time.h>
@@ -94,6 +93,71 @@ int main()
     }
     
     ins_sort(list, list_len);
+    
+    cout << "\n";
+    
+    cout << "Массив после сортировки:" << "\n";
+    for (int i = 0; i < list_len; i++)
+    {
+        cout << list[i] << "\t";
+    }
+    return 0;
+}
+
+//быстрая сортировка
+#include <iostream>
+#include <time.h>
+#include <cstdlib>
+using namespace std;
+
+int partition(int list[], int p, int r)
+{
+    int x = list[r];
+    int i = p - 1;
+    for (int j = p; j < r; ++j)
+    {
+        if (list[j] <= x)
+        {
+            i = i + 1;
+            if (i >= p)
+                swap(list[i], list[j]);
+        }
+    }
+    swap(list[i + 1], list[r]);
+    return i + 1;
+}
+
+
+void quick_sort(int list[], int p, int r)
+{
+    if (p >= r)
+        return;
+    
+    auto q = partition(list, p, r);
+    quick_sort(list, p, q - 1);
+    quick_sort(list, q + 1, r);
+}
+int main()
+{
+    int list_len;
+    cout << "Введите длину массива: ";
+    cin >> list_len;
+
+    int* list = new int[list_len]; 
+
+    srand(time(NULL));  
+    for (int i = 0; i < list_len; i++) 
+    {
+        list[i] = rand() % 100;
+    }
+    
+    cout << "Массив до сортировки: \n";
+    for (int i = 0; i < list_len; i++)
+    {
+        cout << list[i] << "\t";
+    }
+    
+    quick_sort(list, 0, list_len);
     
     cout << "\n";
     
