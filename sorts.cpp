@@ -271,3 +271,71 @@ int main()
     }
     return 0;
 }
+
+//сортировка подсчетом
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <time.h>
+#include <cstdlib>
+using namespace std;
+
+void count_sort(vector<int>& arr, int k) {
+    vector<int> count(k + 1, 0);
+
+    for (int i = 0; i < arr.size(); i++)
+    {
+        count[arr[i]]++;
+    }
+
+    for (int i = 1; i <= k; i++) 
+    {
+        count[i] += count[i - 1];
+    }
+
+    vector<int> output(arr.size());
+    for (int i = arr.size() - 1; i >= 0; i--) 
+    {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+
+    for (int i = 0; i < arr.size(); i++) {
+        arr[i] = output[i];
+    }
+}
+
+
+int main()
+{
+    vector<int> list_len;
+    cout << "Введите длину массива: ";
+    cin >> list_len;
+
+    int* list = new int[list_len]; 
+
+    srand(time(NULL));  
+    for (int i = 0; i < list_len; i++) 
+    {
+        list[i] = rand() % 100;
+    }
+    
+    int k = *max
+    
+    cout << "Массив до сортировки: \n";
+    for (int i = 0; i < list_len; i++)
+    {
+        cout << list[i] << "\t";
+    }
+    
+    count_sort(list, 0, list_len - 1);
+    
+    cout << "\n";
+    
+    cout << "Массив после сортировки:" << "\n";
+    for (int i = 0; i < list_len; i++)
+    {
+        cout << list[i] << "\t";
+    }
+    return 0;
+}
