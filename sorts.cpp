@@ -104,6 +104,109 @@ int main()
     return 0;
 }
 
+//сортировка слиянием
+#include <iostream>
+#include <time.h>
+#include <cstdlib>
+using namespace std;
+
+void merge (int list[], int p, int q, int r)
+{
+    int i, j, k;
+    int left_len = q - p + 1;
+    int right_len = r - q;
+    
+    int left_list[left_len], right_list[right_len];
+    
+    for (int a = 0; a < left_len; a++)
+    {
+        left_list[a] = list[p + a];
+    }
+    for (int a = 0; a < right_len; a++)
+    {
+        right_list[a] = list[q + 1 + a];
+    }
+    
+    i = j = 0;
+    k = p;
+    
+    while (i < left_len && j < right_len)
+    {
+        if (left_list[i] <= right_list[j])
+        {
+            list[k] = left_list[i];
+            i++;
+        }
+        else
+        {
+            list[k] = right_list[j];
+            j++;
+        }
+        k++;
+    }
+    
+    while (i < left_len)
+    {
+        list[k] = left_list[i];
+        k++;
+        i++;
+    }
+    
+    while (j < right_len)
+    {
+        list[k] = right_list[j];
+        k++;
+        j++;
+    }
+}
+
+
+int merge_sort (int list[], int p, int r)
+{
+    int q;
+    if (p < r) 
+    {
+        q = (p + r)/2;
+        
+        merge_sort(list, p, q);
+        merge_sort(list, q + 1, r);
+        
+        merge(list, p, q, r);
+    }    
+}
+
+int main()
+{
+    int list_len;
+    cout << "Введите длину массива: ";
+    cin >> list_len;
+
+    int* list = new int[list_len]; 
+
+    srand(time(NULL));  
+    for (int i = 0; i < list_len; i++) 
+    {
+        list[i] = rand() % 100;
+    }
+    
+    cout << "Массив до сортировки: \n";
+    for (int i = 0; i < list_len; i++)
+    {
+        cout << list[i] << "\t";
+    }
+    
+    merge_sort(list, 0, list_len - 1);
+    
+    cout << "\n";
+    
+    cout << "Массив после сортировки:" << "\n";
+    for (int i = 0; i < list_len; i++)
+    {
+        cout << list[i] << "\t";
+    }
+    return 0;
+}
+
 //быстрая сортировка
 #include <iostream>
 #include <time.h>
