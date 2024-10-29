@@ -342,3 +342,98 @@ int main()
     }
     return 0;
 }
+
+//сортировка по разрядам (я ее тем более не понимаю........)
+#include <iostream>
+#include <vector>
+#include <algorithm> 
+#include <ctime>
+#include <cstdlib> 
+using namespace std;
+
+
+int get_max(vector<int>& list)
+{
+    int max = list[0];
+    for (int i = 1; i < list.size(); i++)
+    {
+        if (list[i] > max)
+        {
+            max = list[i];
+        }
+    }
+    return max;
+}
+
+void counting_sort(vector<int>& list, int exp)
+{
+    int n = list.size();
+    vector<int> output(n);
+    vector<int> count(10, 0);
+
+    for (int i = 0; i < n; i++) 
+    {
+        count[(list[i] / exp) % 10]++;
+    }
+
+    for (int i = 1; i < 10; i++) 
+    {
+        count[i] += count[i - 1];
+    }
+
+    for (int i = n - 1; i >= 0; i--) 
+    {
+        output[count[(list[i] / exp) % 10] - 1] = list[i];
+        count[(list[i] / exp) % 10]--;
+    }
+
+    for (int i = 0; i < n; i++) 
+    {
+        list[i] = output[i];
+    }
+}
+
+void radix_sort(vector<int>& list)
+{
+    int max = get_max(list);
+    int exp = 1;
+
+    while (max / exp > 0) 
+    {
+        counting_sort(list, exp);
+        exp *= 10;
+    }
+}
+
+int main() 
+{
+    int n;
+    cout << "Введите количество элементов массива: ";
+    cin >> n;
+
+    vector<int> list(n);
+    srand(time(0));
+
+    for (int i = 0; i < n; i++) 
+    {
+        list[i] = rand() % 100;
+    }
+
+    cout << "Массив до сортировки: ";
+    for (int i : list) 
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    radix_sort(list);
+
+    cout << "Массив после сортировки: ";
+    for (int i : list) 
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
