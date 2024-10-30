@@ -6,53 +6,55 @@ using namespace std;
 
 int find_smallest(int list[], int start_p, int list_len)
 {
- int smallest_p = start_p;
+    int smallest_p = start_p;
 
- for (int i = start_p; i < list_len; i++)
- {
-  if (list[i] < list[smallest_p])
-   smallest_p = i;
- }
- return smallest_p;
+    for (int i = start_p; i < list_len; i++)
+    {
+        if (list[i] < list[smallest_p])
+            smallest_p = i;
+    }
+    return smallest_p;
 }
 
 void sel_sort(int list[], int list_len)
 {
- for (int i = 0; i < list_len; i++)
- {
-  int smallest_p = find_smallest(list, i, list_len);
-  swap(list[i], list[smallest_p]);
- }
- return;
+    for (int i = 0; i < list_len; i++)
+    {
+        int smallest_p = find_smallest(list, i, list_len);
+        swap(list[i], list[smallest_p]);
+    }
+    return;
 }
 
 int main()
 {
- int list_len;
- cout << "Введите длину массива: ";
- cin >> list_len;
+    int list_len;
+    cout << "Введите длину массива: ";
+    cin >> list_len;
 
- int* list = new int[list_len]; 
+    int* list = new int[list_len];
 
- srand(time(NULL));  
- for (int i = 0; i < list_len; i++) 
- {
-    list[i] = rand() % 100;
- }
+    srand(time(NULL));
+    for (int i = 0; i < list_len; i++)
+    {
+        list[i] = rand();
+    }
 
- cout << "Массив до сортировки: " << endl;
- for (int i = 0; i < list_len; i++)
-    cout << list[i] << '\t';
- cout << endl;
-
- sel_sort(list, list_len);
-
- cout << "Массив после сортировки: " << endl;
- for (int i = 0; i < list_len; i++)
-    cout << list[i] << '\t';
- cout << endl;
+    cout << "Массив до сортировки: " << endl;
+    for (int i = 0; i < list_len; i++)
+        cout << list[i] << '\t';
+    cout << endl;
+    
+    int t = clock();
+    sel_sort(list, list_len);
+    cout << clock() - t << endl;
+    
+    cout << "jdfjjfgjgjglj" << endl;
+    cout << "Массив после сортировки: " << endl;
+    for (int i = 0; i < list_len; i++)
+        cout << list[i] << '\t';
+    cout << endl;
 }
-
 //сорировка вставками
 #include <iostream>
 #include <time.h>
@@ -83,7 +85,7 @@ int main()
     srand(time(NULL));  
     for (int i = 0; i < list_len; i++) 
     {
-        list[i] = rand() % 100;
+        list[i] = rand();
     }
     
     cout << "Массив до сортировки: \n";
@@ -186,7 +188,7 @@ int main()
     srand(time(NULL));  
     for (int i = 0; i < list_len; i++) 
     {
-        list[i] = rand() % 100;
+        list[i] = rand();
     }
     
     cout << "Массив до сортировки: \n";
@@ -251,7 +253,7 @@ int main()
     srand(time(NULL));  
     for (int i = 0; i < list_len; i++) 
     {
-        list[i] = rand() % 100;
+        list[i] = rand();
     }
     
     cout << "Массив до сортировки: \n";
@@ -280,7 +282,7 @@ int main()
 #include <cstdlib>
 using namespace std;
 
-void count_sort(vector<int>& list, int k) 
+void count_sort(vector<int>& list, int k)
 {
     vector<int> count(k + 1, 0);
 
@@ -301,7 +303,7 @@ void count_sort(vector<int>& list, int k)
         count[list[i]]--;
     }
 
-    for (int i = 0; i < list.size(); i++) 
+    for (int i = 0; i < list.size(); i++)
     {
         list[i] = output[i];
     }
@@ -313,15 +315,11 @@ int main()
     cout << "Введите длину массива: ";
     cin >> list_len;
 
-    vector<int> list;
-
-    int* list = new int[list_len];
+    vector<int> list(list_len, 0);
 
     srand(time(NULL));
-    for (int i = 0; i < list_len; i++)
-    {
-        list[i] = rand() % 100;
-    }
+
+    generate(list.begin(), list.end(), rand);
 
     cout << "Массив до сортировки: \n";
     for (int i = 0; i < list_len; i++)
@@ -342,7 +340,6 @@ int main()
     }
     return 0;
 }
-
 //сортировка по разрядам (я ее тем более не понимаю........)
 #include <iostream>
 #include <vector>
@@ -416,10 +413,10 @@ int main()
 
     for (int i = 0; i < n; i++) 
     {
-        list[i] = rand() % 100;
+        list[i] = rand();
     }
 
-    cout << "Массив до сортировки: ";
+    cout << "Массив до сортировки: \n";
     for (int i : list) 
     {
         cout << i << " ";
@@ -428,7 +425,7 @@ int main()
 
     radix_sort(list);
 
-    cout << "Массив после сортировки: ";
+    cout << "Массив после сортировки: \n";
     for (int i : list) 
     {
         cout << i << " ";
