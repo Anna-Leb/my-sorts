@@ -49,7 +49,6 @@ int main()
     sel_sort(list, list_len);
     cout << clock() - t << endl;
     
-    cout << "jdfjjfgjgjglj" << endl;
     cout << "Массив после сортировки: " << endl;
     for (int i = 0; i < list_len; i++)
         cout << list[i] << '\t';
@@ -110,16 +109,17 @@ int main()
 #include <iostream>
 #include <time.h>
 #include <cstdlib>
+#include <chrono>
 using namespace std;
 
-void merge (int list[], int p, int q, int r)
+void merge(int list[], int p, int q, int r)
 {
     int i, j, k;
     int left_len = q - p + 1;
     int right_len = r - q;
-    
+
     int left_list[left_len], right_list[right_len];
-    
+
     for (int a = 0; a < left_len; a++)
     {
         left_list[a] = list[p + a];
@@ -128,10 +128,10 @@ void merge (int list[], int p, int q, int r)
     {
         right_list[a] = list[q + 1 + a];
     }
-    
+
     i = j = 0;
     k = p;
-    
+
     while (i < left_len && j < right_len)
     {
         if (left_list[i] <= right_list[j])
@@ -146,14 +146,14 @@ void merge (int list[], int p, int q, int r)
         }
         k++;
     }
-    
+
     while (i < left_len)
     {
         list[k] = left_list[i];
         k++;
         i++;
     }
-    
+
     while (j < right_len)
     {
         list[k] = right_list[j];
@@ -163,18 +163,18 @@ void merge (int list[], int p, int q, int r)
 }
 
 
-int merge_sort (int list[], int p, int r)
+int merge_sort(int list[], int p, int r)
 {
     int q;
-    if (p < r) 
+    if (p < r)
     {
-        q = (p + r)/2;
-        
+        q = (p + r) / 2;
+
         merge_sort(list, p, q);
         merge_sort(list, q + 1, r);
-        
+
         merge(list, p, q, r);
-    }    
+    }
 }
 
 int main()
@@ -183,29 +183,25 @@ int main()
     cout << "Введите длину массива: ";
     cin >> list_len;
 
-    int* list = new int[list_len]; 
+    int* list = new int[list_len];
 
-    srand(time(NULL));  
-    for (int i = 0; i < list_len; i++) 
+    srand(time(NULL));
+    for (int i = 0; i < list_len; i++)
     {
         list[i] = rand();
     }
-    
-    cout << "Массив до сортировки: \n";
-    for (int i = 0; i < list_len; i++)
-    {
-        cout << list[i] << "\t";
-    }
-    
+
+    auto begin = std::chrono::steady_clock::now();
+
     merge_sort(list, 0, list_len - 1);
-    
+
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+    cout << "Время работы сортировки: " << elapsed_ms.count() << " ms\n";
+
     cout << "\n";
-    
-    cout << "Массив после сортировки:" << "\n";
-    for (int i = 0; i < list_len; i++)
-    {
-        cout << list[i] << "\t";
-    }
+
     return 0;
 }
 
@@ -213,6 +209,7 @@ int main()
 #include <iostream>
 #include <time.h>
 #include <cstdlib>
+#include <chrono>
 using namespace std;
 
 int partition(int list[], int p, int r)
@@ -237,7 +234,7 @@ void quick_sort(int list[], int p, int r)
 {
     if (p >= r)
         return;
-    
+
     auto q = partition(list, p, r);
     quick_sort(list, p, q - 1);
     quick_sort(list, q + 1, r);
@@ -248,103 +245,122 @@ int main()
     cout << "Введите длину массива: ";
     cin >> list_len;
 
-    int* list = new int[list_len]; 
+    int* list = new int[list_len];
 
-    srand(time(NULL));  
-    for (int i = 0; i < list_len; i++) 
+    srand(time(NULL));
+    for (int i = 0; i < list_len; i++)
     {
         list[i] = rand();
     }
-    
-    cout << "Массив до сортировки: \n";
-    for (int i = 0; i < list_len; i++)
-    {
-        cout << list[i] << "\t";
-    }
-    
+
+    auto begin = std::chrono::steady_clock::now();
+
     quick_sort(list, 0, list_len);
-    
+
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+    cout << "Время работы сортировки: " << elapsed_ms.count() << " ms\n";
+
     cout << "\n";
-    
-    cout << "Массив после сортировки:" << "\n";
-    for (int i = 0; i < list_len; i++)
-    {
-        cout << list[i] << "\t";
-    }
+
+
     return 0;
 }
-
 //сортировка подсчетом. Я не разобралась.... Но хотя бы есть
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <time.h>
-#include <cstdlib>
+#include <algorithm> 
+#include <ctime>
+#include <cstdlib> 
+#include <chrono>
 using namespace std;
 
-void count_sort(vector<int>& list, int k)
-{
-    vector<int> count(k + 1, 0);
 
-    for (int i = 0; i < list.size(); i++)
+int get_max(vector<int>& list)
+{
+    int max = list[0];
+    for (int i = 1; i < list.size(); i++)
     {
-        count[list[i]]++;
+        if (list[i] > max)
+        {
+            max = list[i];
+        }
+    }
+    return max;
+}
+
+void counting_sort(vector<int>& list, int exp)
+{
+    int n = list.size();
+    vector<int> output(n);
+    vector<int> count(10, 0);
+
+    for (int i = 0; i < n; i++)
+    {
+        count[(list[i] / exp) % 10]++;
     }
 
-    for (int i = 1; i <= k; i++)
+    for (int i = 1; i < 10; i++)
     {
         count[i] += count[i - 1];
     }
 
-    vector<int> output(list.size());
-    for (int i = list.size() - 1; i >= 0; i--)
+    for (int i = n - 1; i >= 0; i--)
     {
-        output[count[list[i]] - 1] = list[i];
-        count[list[i]]--;
+        output[count[(list[i] / exp) % 10] - 1] = list[i];
+        count[(list[i] / exp) % 10]--;
     }
 
-    for (int i = 0; i < list.size(); i++)
+    for (int i = 0; i < n; i++)
     {
         list[i] = output[i];
     }
 }
 
+void radix_sort(vector<int>& list)
+{
+    int max = get_max(list);
+    int exp = 1;
+
+    while (max / exp > 0)
+    {
+        counting_sort(list, exp);
+        exp *= 10;
+    }
+}
+
 int main()
 {
-    int list_len;
-    cout << "Введите длину массива: ";
-    cin >> list_len;
+    int n;
+    cout << "Введите количество элементов массива: ";
+    cin >> n;
 
-    vector<int> list(list_len, 0);
+    vector<int> list(n);
+    srand(time(0));
 
-    srand(time(NULL));
-
-    generate(list.begin(), list.end(), rand);
-
-    cout << "Массив до сортировки: \n";
-    for (int i = 0; i < list_len; i++)
+    for (int i = 0; i < n; i++)
     {
-        cout << list[i] << "\t";
+        list[i] = rand();
     }
 
-    int k = *max_element(list.begin(), list.end());
+    cout << "Начало \n";
 
-    count_sort(list, k);
+    auto begin = std::chrono::steady_clock::now();
 
-    cout << "\n";
+    radix_sort(list);
 
-    cout << "Массив после сортировки:" << "\n";
-    for (int i = 0; i < list_len; i++)
-    {
-        cout << list[i] << "\t";
-    }
-    return 0;
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+    cout << "Время работы сортировки: " << elapsed_ms.count() << " ms\n";
 }
 //сортировка по разрядам (я ее тем более не понимаю........)
 #include <iostream>
 #include <vector>
 #include <algorithm> 
 #include <ctime>
+#include <chrono>
 #include <cstdlib> 
 using namespace std;
 
@@ -368,23 +384,23 @@ void counting_sort(vector<int>& list, int exp)
     vector<int> output(n);
     vector<int> count(10, 0);
 
-    for (int i = 0; i < n; i++) 
+    for (int i = 0; i < n; i++)
     {
         count[(list[i] / exp) % 10]++;
     }
 
-    for (int i = 1; i < 10; i++) 
+    for (int i = 1; i < 10; i++)
     {
         count[i] += count[i - 1];
     }
 
-    for (int i = n - 1; i >= 0; i--) 
+    for (int i = n - 1; i >= 0; i--)
     {
         output[count[(list[i] / exp) % 10] - 1] = list[i];
         count[(list[i] / exp) % 10]--;
     }
 
-    for (int i = 0; i < n; i++) 
+    for (int i = 0; i < n; i++)
     {
         list[i] = output[i];
     }
@@ -395,14 +411,14 @@ void radix_sort(vector<int>& list)
     int max = get_max(list);
     int exp = 1;
 
-    while (max / exp > 0) 
+    while (max / exp > 0)
     {
         counting_sort(list, exp);
         exp *= 10;
     }
 }
 
-int main() 
+int main()
 {
     int n;
     cout << "Введите количество элементов массива: ";
@@ -411,26 +427,19 @@ int main()
     vector<int> list(n);
     srand(time(0));
 
-    for (int i = 0; i < n; i++) 
+    for (int i = 0; i < n; i++)
     {
         list[i] = rand();
     }
 
-    cout << "Массив до сортировки: \n";
-    for (int i : list) 
-    {
-        cout << i << " ";
-    }
-    cout << endl;
+    auto begin = std::chrono::steady_clock::now();
 
     radix_sort(list);
 
-    cout << "Массив после сортировки: \n";
-    for (int i : list) 
-    {
-        cout << i << " ";
-    }
-    cout << endl;
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+    cout << "Время работы сортировки: " << elapsed_ms.count() << " ms\n";
 
     return 0;
 }
