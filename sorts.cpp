@@ -2,6 +2,7 @@
 #include <iostream>
 #include <time.h>
 #include <cstdlib>
+#include <chrono>
 using namespace std;
 
 int find_smallest(int list[], int start_p, int list_len)
@@ -33,31 +34,29 @@ int main()
     cin >> list_len;
 
     int* list = new int[list_len];
-
-    srand(time(NULL));
+    srand(time(0));
     for (int i = 0; i < list_len; i++)
     {
         list[i] = rand();
     }
+    
+    auto begin = std::chrono::steady_clock::now();
+    
+    sel_sort(list, list_len);  
+    
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
 
-    cout << "Массив до сортировки: " << endl;
-    for (int i = 0; i < list_len; i++)
-        cout << list[i] << '\t';
-    cout << endl;
-    
-    int t = clock();
-    sel_sort(list, list_len);
-    cout << clock() - t << endl;
-    
-    cout << "Массив после сортировки: " << endl;
-    for (int i = 0; i < list_len; i++)
-        cout << list[i] << '\t';
-    cout << endl;
+    cout << "Время работы сортировки: " << elapsed_ms.count() << " ms\n";
+
+    cout << "\n"; 
 }
+
 //сорировка вставками
 #include <iostream>
 #include <time.h>
 #include <cstdlib>
+#include <chrono>
 using namespace std;
 
 void ins_sort (int list[], int list_len)
@@ -80,28 +79,24 @@ int main()
     cin >> list_len;
 
     int* list = new int[list_len]; 
-
-    srand(time(NULL));  
+    srand(time(0));
     for (int i = 0; i < list_len; i++) 
     {
         list[i] = rand();
     }
     
-    cout << "Массив до сортировки: \n";
-    for (int i = 0; i < list_len; i++)
-    {
-        cout << list[i] << "\t";
-    }
+    auto begin = std::chrono::steady_clock::now();
     
     ins_sort(list, list_len);
     
     cout << "\n";
     
-    cout << "Массив после сортировки:" << "\n";
-    for (int i = 0; i < list_len; i++)
-    {
-        cout << list[i] << "\t";
-    }
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+    cout << "Время работы сортировки: " << elapsed_ms.count() << " ms\n";
+
+    cout << "\n";    
     return 0;
 }
 
@@ -184,8 +179,7 @@ int main()
     cin >> list_len;
 
     int* list = new int[list_len];
-
-    srand(time(NULL));
+    srand(time(0));
     for (int i = 0; i < list_len; i++)
     {
         list[i] = rand();
@@ -247,7 +241,7 @@ int main()
 
     int* list = new int[list_len];
 
-    srand(time(NULL));
+    srand(time(0));
     for (int i = 0; i < list_len; i++)
     {
         list[i] = rand();
